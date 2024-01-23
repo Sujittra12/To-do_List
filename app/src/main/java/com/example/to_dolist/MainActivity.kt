@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Logout
@@ -19,6 +20,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -75,6 +77,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun MyTopAppBar(contextForToast: Context){
     var expanded by remember{ mutableStateOf(false) }
     CenterAlignedTopAppBar(
+
         title = {
             Text(text="To-do list")
         },
@@ -140,9 +143,10 @@ fun MyTopAppBar(contextForToast: Context){
 fun MyButtomBar(navController: NavHostController, contextForToast: Context){
     val navigationItem = listOf(
         Screen.Home,
-        Screen.Profile,
+        Screen.Notic,
         Screen.Follow,
-        Screen.Notic
+        Screen.Profile
+
     )
     var selectedScreen by remember {
         mutableIntStateOf(0)
@@ -178,6 +182,9 @@ fun MyScaffoldLayout(){
         topBar ={ MyTopAppBar(contextForToast = contextForToast)},
         bottomBar ={ MyButtomBar(navController , contextForToast  )},
         floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            MyFloatingActionButton(contextForToast)
+        },
     ){
             paddingValues ->
         Column (
@@ -192,6 +199,16 @@ fun MyScaffoldLayout(){
         NavGraph(navController = navController)
     }
 
+}
+
+@Composable
+fun MyFloatingActionButton(contextForToast: Context){
+    FloatingActionButton(
+        onClick = {
+            Toast.makeText(contextForToast,"Floating Action Button", Toast.LENGTH_SHORT).show()})
+    {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
+    }
 }
 
 @Preview(showBackground = true)
