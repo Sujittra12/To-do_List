@@ -23,6 +23,9 @@ fun FollowScreen(){
         Text(
             text ="Follow Screen"
         )
+        Text(
+            text="jjjjjjj Screen"
+        )
 
 
 
