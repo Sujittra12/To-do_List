@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.to_dolist.ui.theme.TodoListTheme
@@ -62,13 +63,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 //ของเรา
 //เเทบบาร์ด้านบน
@@ -175,46 +169,51 @@ fun MyButtomBar(navController: NavHostController, contextForToast: Context){
 //หน้าจอเเสดงผล
 
 @Composable
-fun MyScaffoldLayout(){
+fun MyScaffoldLayout() {
     val contextForToast = LocalContext.current.applicationContext
     val navController = rememberNavController()
-    Scaffold (
-        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
-        bottomBar ={ MyButtomBar(navController , contextForToast  )},
+
+    Scaffold(
+        topBar = { MyTopAppBar(contextForToast) },
+        bottomBar = { MyButtomBar(navController, contextForToast) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            MyFloatingActionButton(contextForToast)
+            MyFloatingActionButton(navController)
         },
-    ){
-            paddingValues ->
-        Column (
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
-
-        ){
-            Text(text = "Screen area")
+        ) {
+            Text(text = "")
         }
         NavGraph(navController = navController)
     }
-
 }
 
 @Composable
-fun MyFloatingActionButton(contextForToast: Context){
+fun MyFloatingActionButton(navController: NavController) {
     FloatingActionButton(
         onClick = {
-            Toast.makeText(contextForToast,"Floating Action Button", Toast.LENGTH_SHORT).show()})
-    {
+            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
+                navController.navigate(Screen.Insert.route)
+            } else {
+                navController.popBackStack()
+            }
+        }
+    ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TodoListTheme {
-        Greeting("Android")
+        MyScaffoldLayout()
     }
 }
