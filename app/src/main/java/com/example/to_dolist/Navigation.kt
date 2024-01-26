@@ -11,6 +11,7 @@ fun NavGraph(navController: NavHostController){
 
     NavHost(
         navController = navController,
+//        ค่าเริ่มต้นหน้าเเรกตอนเปิดเเอป
         startDestination =Screen.Home.route
     ){
         composable(
