@@ -42,11 +42,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.to_dolist.ui.theme.TodoListTheme
 import androidx.compose.foundation.shape.CornerSize
+
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +67,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 
 //เเทบเมนูด้านล่าง
@@ -105,42 +110,51 @@ fun MyButtomBar(navController: NavHostController, contextForToast: Context){
 //หน้าจอเเสดงผล
 
 @Composable
-fun MyScaffoldLayout(){
+fun MyScaffoldLayout() {
     val contextForToast = LocalContext.current.applicationContext
     val navController = rememberNavController()
+
     Scaffold (
 //        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
         bottomBar ={ MyButtomBar(navController , contextForToast  )},
+
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            MyFloatingActionButton(contextForToast)
+            MyFloatingActionButton(navController)
         },
-    ){
-            paddingValues ->
-        Column (
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
 
+
         ){
 //            Text(text = )
+
         }
 
         NavGraph(navController = navController)
     }
-
 }
 
 @Composable
-fun MyFloatingActionButton(contextForToast: Context){
+fun MyFloatingActionButton(navController: NavController) {
     FloatingActionButton(
         onClick = {
-            Toast.makeText(contextForToast,"Floating Action Button", Toast.LENGTH_SHORT).show()})
-    {
+            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
+                navController.navigate(Screen.Insert.route)
+            } else {
+                navController.popBackStack()
+            }
+        }
+    ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

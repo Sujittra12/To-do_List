@@ -116,6 +116,7 @@ fun NoticScreen(){
     Scaffold (
         topBar ={ NoticTopAppBar()},
     ){
+
             paddingValues ->
         Column (
             modifier = Modifier
@@ -124,10 +125,19 @@ fun NoticScreen(){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
 
+
         ) {
             Text(
-                text ="Notic"
-            )
+            text ="Notic Screen"
+        )
+//        Button(
+//            onClick = {
+//                Toast.makeText(contextForToast,"This is Profile Screen", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        ){
+//            Text("Click")
+//        }
         }
     }
 }
