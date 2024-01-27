@@ -1,5 +1,6 @@
 package com.example.to_dolist
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Flag
@@ -58,8 +60,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +72,12 @@ import java.util.Calendar
 import java.text.SimpleDateFormat
 import androidx.navigation.NavController
 import java.util.Date
+import kotlin.math.roundToInt
 
+
+
+
+@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertScreen(navController: NavController) {
@@ -76,6 +85,7 @@ fun InsertScreen(navController: NavController) {
     var textFieldDesc by remember { mutableStateOf("") }
     var selectedDate by rememberSaveable { mutableStateOf("") }
     var selectedPriority by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("") }
 
 
     Row(
@@ -109,28 +119,7 @@ fun InsertScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(25.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = {
-                textFieldTitle = ""
-                textFieldDesc = ""
-                if (navController.currentBackStack.value.size >= 2) {
-                    navController.navigate(Screen.Home.route)
-                }
-            }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-            IconButton(onClick = {
-                navController.navigateUp()
-            }) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Checkmark")
-            }
-        }
+
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -160,16 +149,22 @@ fun InsertScreen(navController: NavController) {
                 selectedDate = date
             })
 
-            Spacer(modifier = Modifier.width(25.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             MyPriority(onPriSelected = { priority ->
                 selectedPriority = priority
+            })
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            MyCategory(onCatSelected = {category ->
+                selectedCategory = category
             })
         }
     }
 }
 
-
+//เลือกวันที่
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyDatePicker(onDateSelected: (String) -> Unit) {
@@ -215,9 +210,7 @@ fun MyDatePicker(onDateSelected: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.dp),
-//        verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.Start
+            .padding(start = 8.dp)
     ) {
         IconButton(
             onClick = { showDatePicker = true },
@@ -242,30 +235,36 @@ fun MyDatePicker(onDateSelected: (String) -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
         }
+        Text(
+            text = "Date: ${SimpleDateFormat("dd-MMM-yyyy").format(Date(selectedDate))}",
+            modifier = Modifier.padding(10.dp)
+        )
 
     }
+
 }
 
-//        Text(
-//            text = " Date: ${SimpleDateFormat("dd-MMM-yyyy").format(Date(selectedDate))}"
-//        )
 
 
+
+
+//เลือก Priority
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun MyPriority(onPriSelected: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    val contextForToast = LocalContext.current.applicationContext
+    var selectedPriority by remember { mutableStateOf("") }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.Center
-        ){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp),
+    ){
         IconButton(onClick = {
-            expanded = true },
+            expanded = true
+        },
             modifier = Modifier
                 .background(Color.White, RoundedCornerShape(8.dp))
                 .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
@@ -299,53 +298,245 @@ fun MyPriority(onPriSelected: (String) -> Unit) {
             DropdownMenuItem(
                 text = { Text("Priority 1") },
                 onClick = {
-                    Toast.makeText(contextForToast, "Priority 1", Toast.LENGTH_SHORT).show()
+                    selectedPriority = "Priority 1"
+                    onPriSelected("Priority 1")
                     expanded = false
                 },
                 leadingIcon = {
-                    Icon(Icons.Outlined.Flag,contentDescription = null,tint = Color(0xFFFC3462))
+                    Icon(Icons.Outlined.Flag, contentDescription = null, tint = Color(0xFFFC3462))
                 }
             )
             DropdownMenuItem(
                 text = { Text("Priority 2") },
                 onClick = {
-                    Toast.makeText(contextForToast, "Priority 2", Toast.LENGTH_SHORT).show()
+                    selectedPriority = "Priority 2"
+                    onPriSelected("Priority 2")
                     expanded = false
                 },
                 leadingIcon = {
-                    Icon(Icons.Outlined.Flag,contentDescription = null,tint = Color(0xFFFA963F))
+                    Icon(Icons.Outlined.Flag, contentDescription = null, tint = Color(0xFFFA963F))
                 }
             )
             DropdownMenuItem(
                 text = { Text("Priority 3") },
                 onClick = {
-                    Toast.makeText(contextForToast, "Priority 3", Toast.LENGTH_SHORT).show()
+                    selectedPriority = "Priority 3"
+                    onPriSelected("Priority 3")
                     expanded = false
                 },
                 leadingIcon = {
-                    Icon(Icons.Outlined.Flag,contentDescription = null,tint = Color(0xFFF3F159))
+                    Icon(Icons.Outlined.Flag, contentDescription = null, tint = Color(0xFFF3F159))
                 }
             )
             DropdownMenuItem(
                 text = { Text("Priority 4") },
                 onClick = {
-                    Toast.makeText(contextForToast, "Priority 4", Toast.LENGTH_SHORT).show()
+                    selectedPriority = "Priority 4"
+                    onPriSelected("Priority 4")
                     expanded = false
                 },
                 leadingIcon = {
-                    Icon(Icons.Outlined.Flag,contentDescription = null,tint = Color(0xFF8FF359))
+                    Icon(Icons.Outlined.Flag, contentDescription = null, tint = Color(0xFF8FF359))
                 }
             )
             DropdownMenuItem(
                 text = { Text("Priority 5") },
                 onClick = {
-                    Toast.makeText(contextForToast, "Priority 5", Toast.LENGTH_SHORT).show()
+                    selectedPriority = "Priority 5"
+                    onPriSelected("Priority 5")
                     expanded = false
                 },
                 leadingIcon = {
-                    Icon(Icons.Outlined.Flag,contentDescription = null)
+                    Icon(Icons.Outlined.Flag, contentDescription = null)
                 }
             )
         }
+        Text(
+            text = "Priority: $selectedPriority",
+            modifier = Modifier.padding(10.dp)
+        )
+    }
+}
+
+//@Composable
+//fun MyCategory(onCatSelected: (String) -> Unit) {
+//    var expanded by remember { mutableStateOf(false) }
+//    var selectedCategory by remember { mutableStateOf("") }
+//
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 8.dp),
+//    ) {
+//        IconButton(
+//            onClick = { expanded = true },
+//            modifier = Modifier
+//                .background(Color.White, RoundedCornerShape(8.dp))
+//                .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
+//                .padding(8.dp)
+//                .size(width = 90.dp, height = 30.dp)
+//        ) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Category,
+//                    contentDescription = "Open category",
+//                    tint = Color.DarkGray,
+//                    modifier = Modifier.size(25.dp)
+//                )
+//                Text(
+//                    text = "Category",
+//                    modifier = Modifier.fillMaxWidth(),
+//                    fontSize = 13.sp
+//                )
+//            }
+//        }
+//
+//        DropdownMenu(
+//            expanded = expanded,
+//            onDismissRequest = {
+//                expanded = false
+//            },
+//            modifier = Modifier.background(Color.White)
+//        ) {
+//            val categories = listOf(
+//                "Category 1",
+//                "Category 2",
+//                "Category 3",
+//                // เพิ่มต่อไปตามลำดับ
+//            )
+//
+//            categories.forEach { category ->
+//                DropdownMenuItem(
+//                    {
+//                        Text(text = category)
+//                    },
+//                    onClick = {
+//                        expanded = false
+//                        selectedCategory = category
+//                        onCatSelected(category)
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(8.dp)
+//                )
+//            }
+//        }
+//
+//        // แสดง Selected Category
+//        Text(
+//            text = "Category: $selectedCategory",
+//            modifier = Modifier.padding(10.dp)
+//
+//        )
+//    }
+//}
+//
+
+//เลือก category
+@Composable
+fun MyCategory(onCatSelected: (String) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    val contextForToast = LocalContext.current.applicationContext
+    var selectedCategory by remember { mutableStateOf("") }
+    var newCategory by remember { mutableStateOf("") }
+
+
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp),
+    ) {
+        IconButton(
+            onClick = { expanded = true },
+            modifier = Modifier
+                .background(Color.White, RoundedCornerShape(8.dp))
+                .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
+                .padding(8.dp)
+                .size(width = 90.dp, height = 30.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Category,
+                    contentDescription = "Open category",
+                    tint = Color.DarkGray,
+                    modifier = Modifier.size(25.dp)
+                )
+                Text(
+                    text = "Category",
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 13.sp
+                )
+            }
         }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+            modifier = Modifier.background(Color.White)
+        ) {
+            val categories = listOf(
+                "Category 1",
+                "Category 2",
+                "Category 3",
+                // เพิ่มต่อไปตามลำดับ
+            )
+
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(text = category) },
+                    onClick = {
+                        expanded = false
+                        selectedCategory = category
+                        onCatSelected(category)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+            }
+
+            // ตัวเลือกเพิ่ม Category ใหม่
+            TextField(
+                value = newCategory,
+                onValueChange = { newCategory = it },
+                label = { Text("New Category") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+
+            // ปุ่มเพิ่ม Category ใหม่
+            Button(
+                onClick = {
+                    if (newCategory.isNotBlank()) {
+                        Toast.makeText(contextForToast, "Added: $newCategory", Toast.LENGTH_SHORT).show()
+                        expanded = false
+                        selectedCategory = newCategory
+                        onCatSelected(newCategory)
+                        newCategory = ""
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Text("Add")
+            }
+        }
+
+        // แสดง Category
+        Text(
+            text = "Category: $selectedCategory",
+            modifier = Modifier.padding(10.dp)
+        )
+    }
 }
