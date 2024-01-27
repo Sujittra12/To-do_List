@@ -41,10 +41,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.navigation.NavHostController
 
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(){
+fun HomeTopAppBar(navController: NavHostController, contextForToast: Context){
+    val navigationItem = listOf(
+                Screen.Search
+        )
+    var selectedScreen by remember {
+        mutableIntStateOf(0)
+    }
     var expanded by remember{ mutableStateOf(false) }
     var select by remember{ mutableStateOf(false) }
     TopAppBar(
@@ -102,12 +110,16 @@ fun HomeTopAppBar(){
 },
         actions ={
 // ปุ่มค้นหาด้านบน
-            IconButton(
-                onClick = {
-                }) {
-                Icon(imageVector = Icons.Outlined.Search
-                    ,contentDescription = "Search")
-            }
+//            IconButton(
+//                onClick = {
+//                    navController.navigate(Screen.Search.route)
+//                    Toast.makeText(contextForToast,"Search", Toast.LENGTH_SHORT)
+//                        .show()
+//
+//                }) {
+//                Icon(imageVector = Icons.Outlined.Search
+//                    ,contentDescription = "Search")
+//            }
 //3จุดไข่ปลา
             IconButton(
                 onClick = { expanded=true
@@ -167,7 +179,7 @@ fun HomeScreen(){
     val contextForToast= LocalContext.current
     val navController = rememberNavController()
     Scaffold (
-        topBar ={ HomeTopAppBar()},
+        topBar ={ HomeTopAppBar(navController,contextForToast)},
     ){
             paddingValues ->
         Column (
@@ -179,7 +191,7 @@ fun HomeScreen(){
 
         ) {
             Text(
-                text ="Home Sc"
+                text ="Home Screen"
             )
         }
 
