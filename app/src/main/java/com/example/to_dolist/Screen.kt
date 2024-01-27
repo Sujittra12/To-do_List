@@ -1,6 +1,11 @@
 package com.example.to_dolist
 
 import androidx.compose.material.icons.Icons
+
+import androidx.compose.material.icons.filled.AppRegistration
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.CalendarToday
@@ -14,7 +19,6 @@ sealed class Screen (val route:String ,val name:String,val icon: ImageVector){
 //    object ToDay: Screen(route = "ToDay", name = "ToDay" , icon = Icons.Default.Home)
 
 //   ใส่ไอคอนตรงนี้
-
     object Home: Screen(route = "Home", name = "To Day" , icon = Icons.Default.CalendarToday)
     object Insert: Screen(route = "Insert", name = "Insert", icon = Icons.Default.Add)
     object Notic: Screen(route = "Notic", name = "Notic" , icon = Icons.Default.NotificationsActive)

@@ -61,6 +61,7 @@ fun FollowScreen(){
 }
 
 
+
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FollowTopAppBar(){
@@ -81,6 +82,7 @@ fun FollowTopAppBar(){
                 Icon(imageVector = Icons.Outlined.Search
                     ,contentDescription = "Search")
             }
+
 
             IconButton(
                 onClick = { expanded=true
