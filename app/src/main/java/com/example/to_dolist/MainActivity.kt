@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Logout
@@ -25,6 +26,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,9 +34,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,9 +54,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.to_dolist.ui.theme.TodoListTheme
+import androidx.compose.foundation.shape.CornerSize
+
+
 
 
 class MainActivity : ComponentActivity() {
@@ -74,89 +80,17 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-//ของเรา
-//เเทบบาร์ด้านบน
-@kotlin.OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTopAppBar(contextForToast: Context){
-    var expanded by remember{ mutableStateOf(false) }
-    CenterAlignedTopAppBar(
-        title = {
-            Text(text="To-do list")
-        },
-        actions ={
-            IconButton(
-                onClick = { Toast.makeText(contextForToast,"Notifications", Toast.LENGTH_SHORT)
-                    .show()
-                }) {
-                Icon(imageVector = Icons.Outlined.NotificationsNone
-                    ,contentDescription = "Notifications")
-            }
-            IconButton(
-                onClick = { Toast.makeText(contextForToast,"Home", Toast.LENGTH_SHORT)
-                    .show()
-                }) {
-                Icon(imageVector = Icons.Outlined.Home
-                    ,contentDescription = "Home")
-            }
-            IconButton(
-                onClick = { expanded=true
-                }) {
-                Icon(Icons.Default.MoreVert,contentDescription = "Open Menu")
-            }
-//            dropdown
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = {expanded= false  }
-            ){
-//                menu
-                DropdownMenuItem(
-                    text = { Text("Setting")},
-                    onClick = {
-                        Toast.makeText(contextForToast,"Setting", Toast.LENGTH_SHORT)
-                            .show()
-                        expanded= false
-                    },
-                    leadingIcon = {
-                        Icon(Icons.Outlined.Settings,contentDescription = null)
-                    }
-                )
-
-                DropdownMenuItem(
-                    text = { Text("Logout")},
-                    onClick = {
-                        Toast.makeText(contextForToast,"Logout", Toast.LENGTH_SHORT)
-                            .show()
-                        expanded= false
-                    },
-                    leadingIcon = {
-                        Icon(Icons.Outlined.Logout,contentDescription = null)
-                    }
-                )
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Color.Blue.copy(alpha = 0.3f)
-        )
-    )
-}
 
 //เเทบเมนูด้านล่าง
 @Composable
 fun MyButtomBar(navController: NavHostController, contextForToast: Context){
     val navigationItem = listOf(
         Screen.Home,
-        Screen.Profile,
+        Screen.Notic,
         Screen.Follow,
-        Screen.Notic
+        Screen.Profile
+
     )
     var selectedScreen by remember {
         mutableIntStateOf(0)
@@ -173,46 +107,72 @@ fun MyButtomBar(navController: NavHostController, contextForToast: Context){
                     }
                     selectedScreen = index
                     navController.navigate(screen.route)
-                    Toast.makeText(contextForToast,screen.name,Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(contextForToast,screen.name,Toast.LENGTH_SHORT).show()
 
 
                 },
             )
         }
     }
+    // ส่ง selectedScreen ไปยัง HomeTopAppBar และ FollowTopAppBar
+//    HomeTopAppBar(selectedScreen = selectedScreen)
+//    FollowTopAppBar(selectedScreen = selectedScreen)
 }
 
 //หน้าจอเเสดงผล
 
 @Composable
-fun MyScaffoldLayout(){
+fun MyScaffoldLayout() {
     val contextForToast = LocalContext.current.applicationContext
     val navController = rememberNavController()
+
     Scaffold (
-        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
+//        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
         bottomBar ={ MyButtomBar(navController , contextForToast  )},
+
         floatingActionButtonPosition = FabPosition.End,
-    ){
-            paddingValues ->
-        Column (
+        floatingActionButton = {
+            MyFloatingActionButton(navController)
+        },
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
 
+
         ){
-            Text(text = "Screen area")
+//            Text(text = )
+
         }
+
         NavGraph(navController = navController)
     }
-
 }
+
+@Composable
+fun MyFloatingActionButton(navController: NavController) {
+    FloatingActionButton(
+        onClick = {
+            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
+                navController.navigate(Screen.Insert.route)
+            } else {
+                navController.popBackStack()
+            }
+        }
+    ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
+    }
+}
+
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TodoListTheme {
-        Greeting("Android")
+        MyScaffoldLayout()
     }
 }
 
