@@ -133,6 +133,3 @@ fun NoticScreen(){
 }
 
 
-
-
-
