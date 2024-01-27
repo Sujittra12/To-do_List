@@ -22,14 +22,14 @@ fun HomeScreen(){
         Text(
             text ="Home Screen"
         )
-//        Button(
-//            onClick = {
-//                Toast.makeText(contextForToast,"This is Home Screen", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//        ){
-//            Text("Click")
-//        }
+        Button(
+            onClick = {
+                Toast.makeText(contextForToast,"This is Home Screen", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        ){
+            Text("Click")
+        }
 
 
     }

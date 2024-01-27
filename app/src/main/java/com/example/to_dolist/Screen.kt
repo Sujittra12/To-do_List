@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen (val route:String ,val name:String,val icon: ImageVector){
@@ -15,4 +16,6 @@ sealed class Screen (val route:String ,val name:String,val icon: ImageVector){
     object Notic: Screen(route = "Notic", name = "Notic" , icon = Icons.Default.Person)
     object Follow: Screen(route = "Follow", name = "Follow" , icon = Icons.Default.Favorite)
     object Profile: Screen(route = "Profile", name = "Profile" , icon = Icons.Default.Favorite)
+    object SearchScreen:Screen(route = "Search" ,name = "Search", icon = Icons.Default.Search)
+
 }

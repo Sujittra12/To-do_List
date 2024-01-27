@@ -36,6 +36,11 @@ fun NavGraph(navController: NavHostController){
         ){
             ProfileScreen()
         }
+        composable(
+            route =Screen.SearchScreen.route
+        ){
+            Search()
+        }
 
 
 

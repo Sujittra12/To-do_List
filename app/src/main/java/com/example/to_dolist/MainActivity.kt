@@ -8,11 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.NotificationsNone
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -39,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.to_dolist.ui.theme.TodoListTheme
@@ -72,27 +76,30 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 //เเทบบาร์ด้านบน
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(contextForToast: Context){
+fun MyTopAppBar(navController: NavHostController,contextForToast: Context){
     var expanded by remember{ mutableStateOf(false) }
     CenterAlignedTopAppBar(
+
         title = {
             Text(text="To-do list")
         },
         actions ={
             IconButton(
-                onClick = { Toast.makeText(contextForToast,"Notifications", Toast.LENGTH_SHORT)
+                onClick = {
+                    navController.navigate(Screen.SearchScreen.route)
+                    Toast.makeText(contextForToast,"Search", Toast.LENGTH_SHORT)
                     .show()
                 }) {
-                Icon(imageVector = Icons.Outlined.NotificationsNone
-                    ,contentDescription = "Notifications")
+                Icon(imageVector = Icons.Outlined.Search
+                    ,contentDescription = "Search")
             }
-            IconButton(
-                onClick = { Toast.makeText(contextForToast,"Home", Toast.LENGTH_SHORT)
-                    .show()
-                }) {
-                Icon(imageVector = Icons.Outlined.Home
-                    ,contentDescription = "Home")
-            }
+//            IconButton(
+//                onClick = { Toast.makeText(contextForToast,"Home", Toast.LENGTH_SHORT)
+//                    .show()
+//                }) {
+//                Icon(imageVector = Icons.Outlined.Home
+//                    ,contentDescription = "Home")
+//            }
             IconButton(
                 onClick = { expanded=true
                 }) {
@@ -175,7 +182,7 @@ fun MyScaffoldLayout(){
     val contextForToast = LocalContext.current.applicationContext
     val navController = rememberNavController()
     Scaffold (
-        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
+        topBar ={ MyTopAppBar(navController,contextForToast)},
         bottomBar ={ MyButtomBar(navController , contextForToast  )},
         floatingActionButtonPosition = FabPosition.End,
     ){
@@ -187,7 +194,7 @@ fun MyScaffoldLayout(){
             horizontalAlignment = Alignment.CenterHorizontally
 
         ){
-            Text(text = "Screen area")
+            //Text(text = "Screen area")
         }
         NavGraph(navController = navController)
     }
