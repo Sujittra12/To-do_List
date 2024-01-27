@@ -40,7 +40,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material3.FloatingActionButton
+import androidx.navigation.NavController
 
 @kotlin.OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -185,5 +188,20 @@ fun HomeScreen(){
 
     }
 
+}
+
+@Composable
+fun MyFloatingActionButton(navController: NavController) {
+    FloatingActionButton(
+        onClick = {
+            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
+                navController.navigate(Screen.Insert.route)
+            } else {
+                navController.popBackStack()
+            }
+        }
+    ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
+    }
 }
 

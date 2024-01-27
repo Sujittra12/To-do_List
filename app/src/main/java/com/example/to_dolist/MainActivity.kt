@@ -1,5 +1,4 @@
 package com.example.to_dolist
-
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
@@ -139,20 +138,7 @@ fun MyScaffoldLayout() {
     }
 }
 
-@Composable
-fun MyFloatingActionButton(navController: NavController) {
-    FloatingActionButton(
-        onClick = {
-            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
-                navController.navigate(Screen.Insert.route)
-            } else {
-                navController.popBackStack()
-            }
-        }
-    ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
-    }
-}
+
 
 
 
