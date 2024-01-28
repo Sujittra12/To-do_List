@@ -44,10 +44,6 @@ fun NavGraph(navController: NavHostController){
             ProfileScreen()
         }
 
-
-
-
-
     }
 
 }
