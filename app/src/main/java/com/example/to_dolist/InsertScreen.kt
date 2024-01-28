@@ -406,12 +406,7 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
     val contextForToast = LocalContext.current.applicationContext
     var selectedCategory by remember { mutableStateOf("") }
     var newCategory by remember { mutableStateOf("") }
-    var categories = listOf(
-        "Category 1",
-        "Category 2",
-        "Category 3",
-        // เพิ่มต่อไปตามลำดับ
-    )
+    var categories by remember { mutableStateOf(mutableListOf("Work", "Study", "Workout")) }
 
     Row(
         modifier = Modifier
@@ -469,7 +464,7 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
             TextField(
                 value = newCategory,
                 onValueChange = { newCategory = it },
-                label = { Text("New Category") },
+                label = { Text("Add Category") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -483,6 +478,7 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
                         expanded = false
                         selectedCategory = newCategory
                         onCatSelected(newCategory)
+                        categories.add(newCategory)
                         newCategory = ""
                     }
                 },

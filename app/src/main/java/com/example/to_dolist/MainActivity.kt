@@ -116,11 +116,11 @@ fun MyScaffoldLayout() {
     Scaffold (
 //        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
         bottomBar ={ MyButtomBar(navController , contextForToast  )},
-
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             MyFloatingActionButton(navController)
-        },
+        }
+
     ) { paddingValues ->
         Column(
             modifier = Modifier

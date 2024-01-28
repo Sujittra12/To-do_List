@@ -173,28 +173,27 @@ fun HomeTopAppBar(){
 }
 
 @Composable
-fun HomeScreen(){
-    val contextForToast= LocalContext.current
+fun HomeScreen() {
+    val contextForToast = LocalContext.current
     val navController = rememberNavController()
-    Scaffold (
-        topBar ={ HomeTopAppBar()},
-    ){
-            paddingValues ->
-        Column (
+
+    Scaffold(
+        topBar = { HomeTopAppBar() },
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            MyFloatingActionButton(navController)
+        }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-
         ) {
-            Text(
-                text ="Home Sc"
-            )
+            Text(text = "Home Sc")
         }
-
     }
-
 }
 
 @Composable
@@ -211,4 +210,3 @@ fun MyFloatingActionButton(navController: NavController) {
         Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
     }
 }
-
