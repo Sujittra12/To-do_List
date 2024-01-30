@@ -45,10 +45,9 @@ fun NavGraph(navController: NavHostController){
         }
 
 
-
-
-
-
+        
+        
+        
     }
 
 }

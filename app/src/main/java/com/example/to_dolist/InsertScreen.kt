@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.Button
@@ -52,6 +53,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -72,7 +74,6 @@ import java.util.Calendar
 import java.text.SimpleDateFormat
 import androidx.navigation.NavController
 import java.util.Date
-import kotlin.math.roundToInt
 
 
 
@@ -81,12 +82,13 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertScreen(navController: NavController) {
+    var insertItemsList = remember { mutableStateListOf<Inserted>() }
     var textFieldTitle by remember { mutableStateOf("") }
     var textFieldDesc by remember { mutableStateOf("") }
     var selectedDate by rememberSaveable { mutableStateOf("") }
     var selectedPriority by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("") }
-
+    var selectedFile by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -98,20 +100,43 @@ fun InsertScreen(navController: NavController) {
         IconButton(onClick = {
             textFieldTitle = ""
             textFieldDesc = ""
+            selectedDate = ""
+            selectedPriority = ""
+            selectedCategory = ""
             if (navController.currentBackStack.value.size >= 2) {
                 navController.navigate(Screen.Home.route)
             }
         }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
         }
+
         IconButton(onClick = {
-            navController.navigateUp()
+            // ทำงานที่ต้องการเมื่อคลิกที่ปุ่ม Confirm
+            insertItemsList.add(
+                Inserted(
+                    textFieldTitle,
+                    textFieldDesc,
+                    selectedDate,
+                    selectedPriority,
+                    selectedCategory,
+                    selectedFile
+                )
+            )
+
+            // ล้างค่าตัวแปร
+            textFieldTitle = ""
+            textFieldDesc = ""
+            selectedDate = ""
+            selectedPriority = ""
+            selectedCategory = ""
+
+            if (navController.currentBackStack.value.size >= 2) {
+                navController.navigate(Screen.Home.route)
+            }
         }) {
             Icon(imageVector = Icons.Default.Check, contentDescription = "Checkmark")
         }
     }
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -126,7 +151,14 @@ fun InsertScreen(navController: NavController) {
                 .padding(8.dp),
             value = textFieldTitle,
             onValueChange = { textFieldTitle = it },
-            placeholder = { Text(text = "Title") }
+            placeholder = { Text(text = "Title",style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )) },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent
+            )
         )
         TextField(
             modifier = Modifier
@@ -160,8 +192,15 @@ fun InsertScreen(navController: NavController) {
             MyCategory(onCatSelected = {category ->
                 selectedCategory = category
             })
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            MyFile(onFileSelected = {file ->
+                selectedFile = file
+            })
         }
     }
+
 }
 
 //เลือกวันที่
@@ -232,7 +271,8 @@ fun MyDatePicker(onDateSelected: (String) -> Unit) {
                 )
                 Text(
                     text = "Date",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 15.sp
                 )
             }
 
@@ -283,7 +323,8 @@ fun MyPriority(onPriSelected: (String) -> Unit) {
                 )
                 Text(
                     text = "Priority",
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 15.sp
                 )
             }
         }
@@ -358,83 +399,6 @@ fun MyPriority(onPriSelected: (String) -> Unit) {
     }
 }
 
-//@Composable
-//fun MyCategory(onCatSelected: (String) -> Unit) {
-//    var expanded by remember { mutableStateOf(false) }
-//    var selectedCategory by remember { mutableStateOf("") }
-//
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(start = 8.dp),
-//    ) {
-//        IconButton(
-//            onClick = { expanded = true },
-//            modifier = Modifier
-//                .background(Color.White, RoundedCornerShape(8.dp))
-//                .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
-//                .padding(8.dp)
-//                .size(width = 90.dp, height = 30.dp)
-//        ) {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.spacedBy(8.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Category,
-//                    contentDescription = "Open category",
-//                    tint = Color.DarkGray,
-//                    modifier = Modifier.size(25.dp)
-//                )
-//                Text(
-//                    text = "Category",
-//                    modifier = Modifier.fillMaxWidth(),
-//                    fontSize = 13.sp
-//                )
-//            }
-//        }
-//
-//        DropdownMenu(
-//            expanded = expanded,
-//            onDismissRequest = {
-//                expanded = false
-//            },
-//            modifier = Modifier.background(Color.White)
-//        ) {
-//            val categories = listOf(
-//                "Category 1",
-//                "Category 2",
-//                "Category 3",
-//                // เพิ่มต่อไปตามลำดับ
-//            )
-//
-//            categories.forEach { category ->
-//                DropdownMenuItem(
-//                    {
-//                        Text(text = category)
-//                    },
-//                    onClick = {
-//                        expanded = false
-//                        selectedCategory = category
-//                        onCatSelected(category)
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(8.dp)
-//                )
-//            }
-//        }
-//
-//        // แสดง Selected Category
-//        Text(
-//            text = "Category: $selectedCategory",
-//            modifier = Modifier.padding(10.dp)
-//
-//        )
-//    }
-//}
-//
-
 //เลือก category
 @Composable
 fun MyCategory(onCatSelected: (String) -> Unit) {
@@ -442,8 +406,7 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
     val contextForToast = LocalContext.current.applicationContext
     var selectedCategory by remember { mutableStateOf("") }
     var newCategory by remember { mutableStateOf("") }
-
-
+    var categories by remember { mutableStateOf(mutableListOf("Work", "Study", "Workout")) }
 
     Row(
         modifier = Modifier
@@ -483,13 +446,6 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
             },
             modifier = Modifier.background(Color.White)
         ) {
-            val categories = listOf(
-                "Category 1",
-                "Category 2",
-                "Category 3",
-                // เพิ่มต่อไปตามลำดับ
-            )
-
             categories.forEach { category ->
                 DropdownMenuItem(
                     text = { Text(text = category) },
@@ -508,7 +464,7 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
             TextField(
                 value = newCategory,
                 onValueChange = { newCategory = it },
-                label = { Text("New Category") },
+                label = { Text("Add Category") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -522,6 +478,7 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
                         expanded = false
                         selectedCategory = newCategory
                         onCatSelected(newCategory)
+                        categories.add(newCategory)
                         newCategory = ""
                     }
                 },
@@ -536,6 +493,50 @@ fun MyCategory(onCatSelected: (String) -> Unit) {
         // แสดง Category
         Text(
             text = "Category: $selectedCategory",
+            modifier = Modifier.padding(10.dp)
+        )
+    }
+}
+
+@Composable
+fun MyFile(onFileSelected: (String) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedFile by remember { mutableStateOf("") }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp),
+    ) {
+        IconButton(
+            onClick = {
+                expanded = true
+            },
+            modifier = Modifier
+                .background(Color.White, RoundedCornerShape(8.dp))
+                .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
+                .padding(8.dp)
+                .size(width = 90.dp, height = 30.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.UploadFile,
+                    contentDescription = "Open File",
+                    tint = Color.DarkGray,
+                    modifier = Modifier.size(25.dp)
+                )
+                Text(
+                    text = "File",
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 15.sp
+                )
+            }
+        }
+        Text(
+            text = "File: ",
             modifier = Modifier.padding(10.dp)
         )
     }
