@@ -11,12 +11,19 @@ fun NavGraph(navController: NavHostController){
 
     NavHost(
         navController = navController,
+//        ค่าเริ่มต้นหน้าเเรกตอนเปิดเเอป
         startDestination =Screen.Home.route
     ){
         composable(
             route =Screen.Home.route
         ){
             HomeScreen()
+        }
+
+        composable(
+            route = Screen.Insert.route
+        ){
+            InsertScreen(navController)
         }
 
         composable(
@@ -38,9 +45,9 @@ fun NavGraph(navController: NavHostController){
         }
 
 
-
-
-
+        
+        
+        
     }
 
 }
