@@ -21,6 +21,12 @@ fun NavGraph(navController: NavHostController){
         }
 
         composable(
+            route = Screen.Insert.route
+        ){
+            InsertScreen(navController)
+        }
+
+        composable(
             route =Screen.Notic.route
         ){
             NoticScreen()
@@ -39,9 +45,9 @@ fun NavGraph(navController: NavHostController){
         }
 
 
-
-
-
+        
+        
+        
     }
 
 }

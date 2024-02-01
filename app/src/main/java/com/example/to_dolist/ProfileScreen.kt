@@ -103,24 +103,24 @@ fun ProfileTopAppBar(){
 @Composable
 fun ProfileScreen(){
     val contextForToast= LocalContext.current
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    val navController = rememberNavController()
+    Scaffold (
+        topBar ={ ProfileTopAppBar()},
     ){
-        Text(
-            text ="Profile Screen"
-        )
-//        Button(
-//            onClick = {
-//                Toast.makeText(contextForToast,"This is Profile Screen", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//        ){
-//            Text("Click")
-//        }
 
+            paddingValues ->
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
 
+        ) {
+            Text(
+                text ="Profile Screen"
+            )
+        }
     }
 
 }
