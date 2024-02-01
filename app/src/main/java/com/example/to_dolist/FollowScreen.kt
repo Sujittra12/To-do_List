@@ -1,19 +1,23 @@
 package com.example.to_dolist
 
-import android.content.Context
-//import android.graphics.Color
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,33 +36,214 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun FollowScreen(){
-    val contextForToast= LocalContext.current
+fun FollowScreen() {
+    var all = 10
+    var finish = 2
+    var late = 6
+    var doing = 2
+    var day = 3
+    val pList = listOf("project Mobile", "project Security", "project DataEngineer")
+    val contextForToast = LocalContext.current
     val navController = rememberNavController()
-    Scaffold (
-        topBar ={ FollowTopAppBar()},
-    ){
-            paddingValues ->
-        Column (
+    Scaffold(
+        topBar = { FollowTopAppBar() },
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues = paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                text ="follow"
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = "Overview",
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(
+                        start = 30.dp,
+                        top = 30.dp,
+                        bottom = 10.dp
+                    )
+                )
+            }
+            Row(
+                modifier = Modifier.padding(start = 30.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .width(160.dp)
+                            .height(165.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color(android.graphics.Color.parseColor("#409FCA"))
+                                .copy(alpha = 0.3f)
+                        ),
+                        content = {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "${all}", fontSize = 40.sp)
+                                Text(
+                                    text = "All to do list",
+                                    modifier = Modifier
+                                        .padding(16.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Row {
+                        Card(
+                            modifier = Modifier
+                                .padding(start = 9.dp, bottom = 10.dp)
+                                .width(95.dp)
+                                .height(77.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(android.graphics.Color.parseColor("#409FCA"))
+                                    .copy(alpha = 0.3f)
+                            ),
+                            content = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "${finish}",
+                                        fontSize = 24.sp,
+                                        color = Color(52, 160, 69)
+                                    )
+                                    Text(text = "completed", fontSize = 12.sp)
+                                }
+                            }
+                        )
+
+                        Card(
+                            modifier = Modifier
+                                .padding(start = 9.dp, bottom = 10.dp)
+                                .width(95.dp)
+                                .height(77.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(android.graphics.Color.parseColor("#409FCA"))
+                                    .copy(alpha = 0.3f)
+                            ),
+                            content = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "${late}",
+                                        fontSize = 24.sp,
+                                        color = Color(212, 38, 27)
+                                    )
+                                    Text(text = "late", fontSize = 15.sp)
+                                }
+                            }
+                        )
+                    }
+                    Row {
+                        Card(
+                            modifier = Modifier
+                                .padding(start = 9.dp)
+                                .width(200.dp)
+                                .height(78.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color(android.graphics.Color.parseColor("#409FCA"))
+                                    .copy(alpha = 0.3f)
+                            ),
+                            content = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(text = "${doing}", fontSize = 22.sp)
+                                    Text(text = "doing", fontSize = 15.sp)
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = "Next to do ( ${day} day)",
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(
+                        start = 30.dp,
+                        top = 10.dp,
+                        bottom = 5.dp
+                    )
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 10.dp)
+                    .fillMaxWidth()
+            ) {
+                pList.forEachIndexed { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 20.dp, bottom = 7.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+
+                        ) {
+                            Icon(
+                                Icons.Outlined.CalendarMonth,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(start = 15.dp, end = 5.dp)
+                                    .size(24.dp)
+                            )
+                            Text(text = item, fontSize = 18.sp)
+                        }
+                    }
+                }
+            }
         }
     }
-
 }
+
 
 
 
@@ -82,7 +267,6 @@ fun FollowTopAppBar(){
                 Icon(imageVector = Icons.Outlined.Search
                     ,contentDescription = "Search")
             }
-
 
             IconButton(
                 onClick = { expanded=true
