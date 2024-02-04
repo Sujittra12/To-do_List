@@ -1,5 +1,6 @@
 package com.example.to_dolist
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -68,12 +69,15 @@ import java.util.Calendar
 import java.text.SimpleDateFormat
 import androidx.navigation.NavController
 import java.util.Date
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertScreen(navController: NavController) {
+    var textFieldIDStatus_Work by remember { mutableStateOf("") }
+    var textFieldIDPriority by remember { mutableStateOf("") }
+    var textFieldIDFavorite by remember { mutableStateOf("") }
     var textFieldTitle by remember { mutableStateOf("") }
     var textFieldDesc by remember { mutableStateOf("") }
+    var textFieldCetagory by remember { mutableStateOf("") }
     var selectedDate by rememberSaveable { mutableStateOf("") }
     var selectedPriority by remember { mutableStateOf("") }
 
@@ -252,6 +256,7 @@ fun MyDatePicker(onDateSelected: (String) -> Unit) {
 //        )
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun MyPriority(onPriSelected: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }

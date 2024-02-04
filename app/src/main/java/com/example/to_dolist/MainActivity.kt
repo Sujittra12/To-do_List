@@ -80,7 +80,9 @@ fun MyButtomBar(navController: NavHostController, contextForToast: Context){
         Screen.Home,
         Screen.Notic,
         Screen.Follow,
-        Screen.Profile
+        Screen.Profile,
+        Screen.Search
+
 
     )
     var selectedScreen by remember {
@@ -116,7 +118,7 @@ fun MyScaffoldLayout() {
     val navController = rememberNavController()
 
     Scaffold (
-//        topBar ={ MyTopAppBar(contextForToast = contextForToast)},
+   //    topBar ={ MyTopAppBar(contextForToast = contextForToast)},
         bottomBar ={ MyButtomBar(navController , contextForToast  )},
 
         floatingActionButtonPosition = FabPosition.End,
@@ -140,20 +142,7 @@ fun MyScaffoldLayout() {
     }
 }
 
-@Composable
-fun MyFloatingActionButton(navController: NavController) {
-    FloatingActionButton(
-        onClick = {
-            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
-                navController.navigate(Screen.Insert.route)
-            } else {
-                navController.popBackStack()
-            }
-        }
-    ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
-    }
-}
+
 
 
 

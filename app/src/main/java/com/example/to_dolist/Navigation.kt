@@ -1,6 +1,7 @@
 package com.example.to_dolist
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,7 +45,7 @@ fun NavGraph(navController: NavHostController){
             ProfileScreen()
         }
         composable(
-            route =Screen.SearchScreen.route
+            route =Screen.Search.route
         ){
             Search()
         }

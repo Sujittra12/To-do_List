@@ -130,14 +130,7 @@ fun NoticScreen(){
             Text(
             text ="Notic Screen"
         )
-//        Button(
-//            onClick = {
-//                Toast.makeText(contextForToast,"This is Profile Screen", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//        ){
-//            Text("Click")
-//        }
+//
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.to_dolist
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -40,13 +41,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.unit.Dp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-@kotlin.OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("RestrictedApi")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(navController: NavHostController, contextForToast: Context){
+fun HomeTopAppBar(navController: NavHostController, contextForToast: Context,){
+    val createClient = TaskAPI.create()
+    var taskItemsList = remember { mutableStateListOf<Task>() }
     val navigationItem = listOf(
                 Screen.Search
         )
@@ -180,7 +200,8 @@ fun HomeScreen(){
     val navController = rememberNavController()
     Scaffold (
         topBar ={ HomeTopAppBar(navController,contextForToast)},
-    ){
+    )
+    {
             paddingValues ->
         Column (
             modifier = Modifier
@@ -189,13 +210,89 @@ fun HomeScreen(){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
 
-        ) {
+        )
+        {
             Text(
-                text ="Home Screen"
+                text =""
             )
         }
 
     }
 
 }
+@Composable
+fun MyFloatingActionButton(navController: NavController) {
+    val createClient = TaskAPI.create()
+    var taskItemsList = remember { mutableStateListOf<Task>() }
+    val contextForToast = LocalContext.current.applicationContext
+
+    taskItemsList.clear()
+    createClient.retrieveTask()
+        .enqueue(object : Callback<List<Task>> {
+            override fun onResponse(call: Call<List<Task>>,
+                                    response: Response<List<Task>>
+            ){
+                response.body()?.forEach {
+                    taskItemsList.add(Task(it.idStatus_Work,it.idPriority,it.idFavorite,it.Task_Name,it.description,it.Cetagory,it.Due_Date))
+                }
+            }
+            override  fun onFailure(call: Call<List<Task>>, t: Throwable){
+                Toast.makeText(contextForToast,"Error onFailure "+ t.message,
+                    Toast.LENGTH_LONG).show()
+            }
+        })
+
+    FloatingActionButton(
+        onClick = {
+            if (navController.currentBackStackEntry?.destination?.route != Screen.Insert.route) {
+                navController.navigate(Screen.Insert.route)
+            } else {
+                navController.popBackStack()
+            }
+        }
+    ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "add icon")
+    }
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ){
+        itemsIndexed(
+            items = taskItemsList,
+        ){index, item ->
+            Card (
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                    .fillMaxWidth()
+                    .height(130.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 2.dp
+                ),
+                shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+                onClick = {
+                    Toast.makeText(
+                        contextForToast,"Click on ${item.Task_Name}.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ){
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dp(130f))
+                    .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text =
+                                "Name: ${item.Task_Name}\n"+
+                                "${item.description}\n")
+
+                }
+            }
+        }
+    }
+}
+
 
