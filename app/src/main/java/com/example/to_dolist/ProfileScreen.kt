@@ -107,6 +107,7 @@ fun ProfileScreen(){
     Scaffold (
         topBar ={ ProfileTopAppBar()},
     ){
+
             paddingValues ->
         Column (
             modifier = Modifier

@@ -1,4 +1,5 @@
 package com.example.to_dolist
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
@@ -58,8 +59,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.to_dolist.ui.theme.TodoListTheme
 import androidx.compose.foundation.shape.CornerSize
-
-
+import androidx.compose.material3.Text
 
 
 class MainActivity : ComponentActivity() {
@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
 
 
 //เเทบเมนูด้านล่าง
+@SuppressLint("RestrictedApi")
 @Composable
 fun MyButtomBar(navController: NavHostController, contextForToast: Context){
     val navigationItem = listOf(
